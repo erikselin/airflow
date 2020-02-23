@@ -30,13 +30,13 @@ class timeout(LoggingMixin):  # pylint: disable=invalid-name
 
     def __init__(self, seconds=1, error_message='Timeout'):
         self.seconds = seconds
-        self.error_message = error_message + ', PID: ' + str(os.getpid())
+        self.error_message = "Process timed out after {}s, PID: {} - {}".format(seconds, os.getpid(), error_message)
 
     def handle_timeout(self, signum, frame):
         """
         Logs information and raises AirflowTaskTimeout.
         """
-        self.log.error("Process timed out, PID: %s", str(os.getpid()))
+        self.log.error(self.error_message)
         raise AirflowTaskTimeout(self.error_message)
 
     def __enter__(self):
